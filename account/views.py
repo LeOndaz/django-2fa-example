@@ -111,8 +111,8 @@ class TOTPView(OTPView):
         user = get_user_from_session(self.request.session)
 
         if not user.verify_totp(code):
-            messages.error(self.request, 'Invalid OTP')
-            return HttpResponseRedirect(reverse('totp'))
+            messages.error(self.request, "Invalid OTP")
+            return HttpResponseRedirect(reverse("totp"))
 
         login(self.request, user)
         return HttpResponseRedirect(reverse("home"))
@@ -176,18 +176,18 @@ class ConfirmEmailView(TwoFactorView):
     form_class = OTPForm
 
     def form_valid(self, form):
-        code = form.cleaned_data['code']
+        code = form.cleaned_data["code"]
         user = get_user_from_session(self.request.session)
 
         try:
             otp = OTP.objects.get(user=user, code=code)
         except OTP.DoesNotExist:
-            messages.error(self.request, 'Invalid OTP')
-            return HttpResponseRedirect(reverse('confirm-email'))
+            messages.error(self.request, "Invalid OTP")
+            return HttpResponseRedirect(reverse("confirm-email"))
 
         if otp.is_expired():
-            messages.error(self.request, 'Invalid or expired OTP')
-            return HttpResponseRedirect(reverse('confirm-email'))
+            messages.error(self.request, "Invalid or expired OTP")
+            return HttpResponseRedirect(reverse("confirm-email"))
 
         user.is_active = True
         user.save()

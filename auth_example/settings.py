@@ -9,9 +9,15 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import logging
 import os
+import uuid
 from pathlib import Path
+
+import dj_database_url
 from dotenv import load_dotenv
+
+logger = logging.getLogger(__file__)
 
 load_dotenv()
 
@@ -24,12 +30,19 @@ AUTH_USER_MODEL = "account.User"
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-_(438^=q1=#%3k%x1s1ab5)f_k%xy0n+)&lkam_!!#=*k@h0wu"
+SECRET_KEY = os.environ.get("SECRET_KEY")
+
+if SECRET_KEY is None:
+    logging.warning("Using a random random uuid for SECRET_KEY")
+    SECRET_KEY = str(uuid.uuid4())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
+if DEBUG:
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
@@ -78,14 +91,14 @@ WSGI_APPLICATION = "auth_example.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {
+DATABASES = {}
+if DEBUG:
+    DATABASES["default"] = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
-}
-
+else:
+    DATABASES["default"] = (dj_database_url.config(conn_max_age=600),)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -137,8 +150,8 @@ TWILIO_FROM_NUMBER = os.environ.get("TWILIO_FROM_NUMBER")
 AUTHENTICATION_BACKENDS = ["account.backends.EmailBackend"]
 
 
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = os.environ.get('EMAIL_PORT', 465)
-EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', True)
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT", 465)
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", True)
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")

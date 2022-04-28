@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0006_alter_user__totp_hash_alter_user_is_active_and_more'),
+        ("account", "0006_alter_user__totp_hash_alter_user_is_active_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='_totp_hash',
-            field=models.CharField(db_column='totp_hash', default='83ff6634-f329-49f0-bc36-eb1bd0be3a75keuhjbisszyhrocjhfuztowlogfqjqledxjfskznegefwyfgvcjhfmgpoaozfkcrpbahhjifipagsazkumtqowyubvdckfddyqfo', max_length=256),
+            model_name="user",
+            name="_totp_hash",
+            field=models.CharField(
+                db_column="totp_hash",
+                default="83ff6634-f329-49f0-bc36-eb1bd0be3a75keuhjbisszyhrocjhfuztowlogfqjqledxjfskznegefwyfgvcjhfmgpoaozfkcrpbahhjifipagsazkumtqowyubvdckfddyqfo",
+                max_length=256,
+            ),
         ),
     ]

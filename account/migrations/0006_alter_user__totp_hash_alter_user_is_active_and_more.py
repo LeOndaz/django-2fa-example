@@ -7,23 +7,33 @@ import phonenumber_field.modelfields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0005_remove_user_totp_hash_user__totp_hash'),
+        ("account", "0005_remove_user_totp_hash_user__totp_hash"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='_totp_hash',
-            field=models.CharField(db_column='totp_hash', default='9e0dd94c-45ca-47d6-a1ad-770d7a659ef3eupnnxngglqxsznputcsigzdxgznzrhupqiqdkxfihfyeqfyetnnwiguguqjljtjrxwouqmweenobltgxrooszuwzevsfjnyuonk', max_length=256),
+            model_name="user",
+            name="_totp_hash",
+            field=models.CharField(
+                db_column="totp_hash",
+                default="9e0dd94c-45ca-47d6-a1ad-770d7a659ef3eupnnxngglqxsznputcsigzdxgznzrhupqiqdkxfihfyeqfyetnnwiguguqjljtjrxwouqmweenobltgxrooszuwzevsfjnyuonk",
+                max_length=256,
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='is_active',
-            field=models.BooleanField(default=False, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active'),
+            model_name="user",
+            name="is_active",
+            field=models.BooleanField(
+                default=False,
+                help_text="Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
+                verbose_name="active",
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='phone_number',
-            field=phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128, null=True, region=None, unique=True),
+            model_name="user",
+            name="phone_number",
+            field=phonenumber_field.modelfields.PhoneNumberField(
+                blank=True, max_length=128, null=True, region=None, unique=True
+            ),
         ),
     ]
