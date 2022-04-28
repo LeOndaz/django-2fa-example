@@ -55,9 +55,19 @@
             padding: 5px;
         }
 
+        .top-bar {
+            padding: 20px;
+            width: 100%;
+            background-color: white;
+        }
+
+        .error {
+            color: indianred;
+        }
     </style>
 </head>
 <body>
+
 <h1><a href="{% url 'home' %}">HOME</a></h1>
 <main>
     {% block content %}

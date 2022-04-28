@@ -4,7 +4,15 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-
+{% if messages %}
+    <div class="top-bar">
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+</div>
+{% endif %}
         {{ form.non_field_errors }}
         {% for field in form %}
             <div class="row">

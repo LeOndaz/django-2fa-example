@@ -132,12 +132,14 @@ LOGOUT_REDIRECT_URL = "/"
 
 TWILIO_SID = os.environ.get("TWILIO_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
+TWILIO_FROM_NUMBER = os.environ.get("TWILIO_FROM_NUMBER")
 
 AUTHENTICATION_BACKENDS = ["account.backends.EmailBackend"]
 
 
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-EMAIL_HOST_USER = "ahmeddark369@gmail.com"
-EMAIL_HOST_PASSWORD = "mmviotowfskgyuvf"
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 465)
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', True)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+# EMAIL_HOST_PASSWORD = "mmviotowfskgyuvf"

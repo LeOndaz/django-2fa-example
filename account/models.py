@@ -96,7 +96,7 @@ class User(PermissionsMixin, AbstractBaseUser):
 
     @property
     def totp_hash(self):
-        return base64.b32encode(self._totp_hash.encode("utf-8")).decode("utf-8")
+        return base64.b32encode(self._totp_hash.encode("utf-8")).decode("utf-8").replace('=', '')
 
     def totp(self):
         return pyotp.TOTP(self.totp_hash).now()

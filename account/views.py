@@ -1,6 +1,7 @@
 import io
 
 import pyqrcode
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from django.http.response import HttpResponseForbidden
@@ -14,6 +15,7 @@ from django.contrib.auth import get_user_model, login
 from .forms import RegistrationForm, LoginForm, TwoFactorForm, OTPForm, UserSettingsForm
 from .models import OTP
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 
 User = get_user_model()
@@ -76,7 +78,7 @@ class TwoFactorView(FormView):
         if auth_method == "sms":
             message = "Your OTP code is {}"
             otp = OTP.objects.create(user=user)
-            user.send_sms(..., message.format(otp))
+            user.send_sms(settings.TWILIO_FROM_NUMBER, message.format(otp))
             return HttpResponseRedirect(reverse("otp"))
 
         return HttpResponseRedirect(reverse("totp"))
@@ -109,7 +111,8 @@ class TOTPView(OTPView):
         user = get_user_from_session(self.request.session)
 
         if not user.verify_totp(code):
-            raise ValidationError("Invalid OTP")
+            messages.error(self.request, 'Invalid OTP')
+            return HttpResponseRedirect(reverse('totp'))
 
         login(self.request, user)
         return HttpResponseRedirect(reverse("home"))
