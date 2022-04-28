@@ -7,14 +7,14 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0002_user_groups_user_is_superuser_user_user_permissions'),
+        ("account", "0002_user_groups_user_is_superuser_user_user_permissions"),
     ]
 
     operations = [
         migrations.AlterModelManagers(
-            name='user',
+            name="user",
             managers=[
-                ('objects', account.models.UserManager()),
+                ("objects", account.models.UserManager()),
             ],
         ),
     ]
