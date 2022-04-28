@@ -12,8 +12,11 @@
         <br/>
 
         <ul>
+        {% if not user %}
             <li><a href="{% url 'register' %}">Register</a></li>
             <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
+
             {% if user %}
                 <li><a href="{% url 'user-settings' %}">Settings</a></li>
             {% endif %}

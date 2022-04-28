@@ -10,7 +10,7 @@ User = get_user_model()
 class RegistrationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password1', 'password2', 'phone_number']
+        fields = ['first_name', 'last_name', 'email', 'password1', 'password2']
 
 
 class OTPForm(forms.Form):
@@ -46,7 +46,7 @@ class LoginForm(forms.Form):
             self.user_cache = authenticate(email=email, password=password)
 
             if self.user_cache is None:
-                raise ValidationError('Incorrect phone number or password.')
+                raise ValidationError('Incorrect email or password.')
 
         return self.cleaned_data
 

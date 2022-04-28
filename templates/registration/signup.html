@@ -1,0 +1,8 @@
+{% extends 'form.html' %}
+
+{% block formbutton %}
+    <div class="row-item">
+        <button type="submit" class="form-button">Signup</button>
+        <button type="button" class="form-button"><a href="{% url 'login' %}">Login</a></button>
+    </div>
+{% endblock %}

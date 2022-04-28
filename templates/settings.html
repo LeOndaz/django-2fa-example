@@ -1,0 +1,27 @@
+{% extends 'form.html' %}
+
+
+{% block content %}
+    <form method="POST">
+    {% csrf_token %}
+
+    <div class="row-item">
+        <label for="{{ form.enable_2fa.id_for_label }}">
+        {{ form.enable_2fa.label }}
+
+        </label>
+        {{ form.enable_2fa }}
+    </div>
+
+        <br/>
+        <p>Use authenticator? scan the QR code.</p>
+
+        <div class="row-item">
+            {{ qr|safe }}
+        </div>
+
+    <button type="submit">
+        Submit
+    </button>
+    </form>
+{% endblock content %}

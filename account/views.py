@@ -1,3 +1,6 @@
+import io
+
+import pyqrcode
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from django.http.response import HttpResponseForbidden
@@ -8,6 +11,7 @@ from django.contrib.auth import get_user_model, login
 from .forms import RegistrationForm, LoginForm, TwoFactorForm, OTPForm, UserSettingsForm
 from .models import OTP
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 User = get_user_model()
 
@@ -28,7 +32,13 @@ def home(request):
 
 class LoginView(BaseLoginView):
     form_class = LoginForm
-    template_name = 'form.html'
+    success_url = reverse_lazy('home')
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect('home')
+
+        return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
         """
@@ -43,7 +53,7 @@ class LoginView(BaseLoginView):
             return HttpResponseRedirect(reverse('two-factor'))
 
         login(self.request, user)
-        return super().form_valid(form)
+        return HttpResponseRedirect(reverse('home'))
 
 
 class TwoFactorView(FormView):
@@ -107,18 +117,17 @@ class LoginSuccessView(RedirectView):
 
 
 class SignUpView(CreateView):
-    template_name = 'form.html'
+    template_name = 'registration/signup.html'
     success_url = reverse_lazy('login')
     form_class = RegistrationForm
 
 
 class UserSettingsView(LoginRequiredMixin, FormView):
     form_class = UserSettingsForm
-    template_name = 'form.html'
+    template_name = 'settings.html'
 
     def form_valid(self, form):
         enable_2fa = form.cleaned_data['enable_2fa']
-        print(enable_2fa)
         self.request.user.two_factor_enabled = enable_2fa
         self.request.user.save()
         return HttpResponseRedirect(reverse('home'))
@@ -134,4 +143,16 @@ class UserSettingsView(LoginRequiredMixin, FormView):
 
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        requestor = self.request.user
+        qr_content = requestor.get_qr_content()
+
+        buffer = io.BytesIO()
+        qrcode = pyqrcode.create(qr_content)
+        qrcode.svg(buffer, scale=3)
+
+        return {
+            **super().get_context_data(**kwargs),
+            'qr': buffer.getvalue().decode(),
+        }
 

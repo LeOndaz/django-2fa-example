@@ -4,9 +4,8 @@ from .views import LoginView, TwoFactorView, OTPView, TOTPView, LoginSuccessView
 
 urlpatterns = [
 
-    path('', home, name='home'),
-
-    path('login/', LoginView.as_view(), name='login'),
+    path('home/', home, name='home'),
+    path('', LoginView.as_view(), name='login'),
     path('register/', SignUpView.as_view(), name='register',),
     path('logout/', LogoutView.as_view(), name='logout',),
 

@@ -9,9 +9,19 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
 from django.apps import apps
 import base64
+from .utils import send_sms
+import string
+
 
 def generate_otp():
     return ''.join(str(random.randint(0, 9)) for i in range(6))
+
+
+def generate_hash():
+    u = str(uuid.uuid4())
+    random_chars = ''.join(random.choices(string.ascii_lowercase, k=100))
+
+    return u + random_chars
 
 
 class UserManager(BaseUserManager):
@@ -69,29 +79,31 @@ class User(PermissionsMixin, AbstractBaseUser):
     )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
 
-    totp_hash = models.UUIDField(default=uuid.uuid4)
-    phone_number = PhoneNumberField(unique=True)
+    _totp_hash = models.CharField(default=generate_hash(), db_column='totp_hash', max_length=256)
+    phone_number = PhoneNumberField(unique=True, blank=True, null=True)
     two_factor_enabled = models.BooleanField(default=False)
 
     objects = UserManager()
     USERNAME_FIELD = 'phone_number'
 
+    @property
+    def totp_hash(self):
+        return base64.b32encode(self._totp_hash.encode('utf-8')).decode('utf-8')
+
     def totp(self):
         return pyotp.TOTP(self.totp_hash).now()
 
     def verify_totp(self, otp):
-        b32_hash = base64.b32encode(str(self.totp_hash).encode('utf-8')).decode('utf-8')
-        print(b32_hash)
-        return pyotp.TOTP(b32_hash).verify(otp)
+        return pyotp.TOTP(self.totp_hash).verify(otp)
 
     def send_sms(self, from_, content):
-        print(content)
+        send_sms(from_, self.phone_number, content)
 
     def get_qr_content(self):
-        return "otpauth://totp/site:{email}?secret={hash}&issuer=site".format(
-            email=self.email,
-            hash=self.totp_hash,
-        )
+        return "otpauth://totp/AuthApp?secret={}".format(self.totp_hash)
+
+    def __str__(self):
+        return self.email
 
 
 class OTP(models.Model):
