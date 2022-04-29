@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'devaiq'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E824415D57004FD5B0D73AA17B12D035 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F2987597060E4A9DA85D2038DF48C34E }}
