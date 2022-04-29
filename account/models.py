@@ -109,7 +109,8 @@ class User(PermissionsMixin, AbstractBaseUser):
         return pyotp.TOTP(self.totp_hash).verify(otp)
 
     def send_sms(self, from_, content):
-        send_sms(from_, self.phone_number, content)
+        if self.phone_number:
+            send_sms(from_, self.phone_number, content)
 
     def send_mail(self, subject, from_, content):
         send_mail(subject, content, from_, [self.email], fail_silently=True)

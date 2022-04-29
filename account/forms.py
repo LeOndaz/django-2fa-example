@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from phonenumber_field.formfields import PhoneNumberField
 
 User = get_user_model()
 
@@ -61,3 +62,4 @@ class LoginForm(forms.Form):
 
 class UserSettingsForm(forms.Form):
     enable_2fa = forms.BooleanField(required=False, initial=False)
+    phone_number = PhoneNumberField(required=False, initial=None)

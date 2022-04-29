@@ -145,7 +145,10 @@ class UserSettingsView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         enable_2fa = form.cleaned_data["enable_2fa"]
+        phone_number = form.cleaned_data['phone_number']
+
         self.request.user.two_factor_enabled = enable_2fa
+        self.request.user.phone_number = phone_number
         self.request.user.save()
         return HttpResponseRedirect(reverse("home"))
 
