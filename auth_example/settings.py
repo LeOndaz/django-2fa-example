@@ -92,6 +92,7 @@ WSGI_APPLICATION = "auth_example.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 DATABASES = {}
+
 if DEBUG:
     DATABASES["default"] = {
         "ENGINE": "django.db.backends.sqlite3",
@@ -148,7 +149,6 @@ TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 TWILIO_FROM_NUMBER = os.environ.get("TWILIO_FROM_NUMBER")
 
 AUTHENTICATION_BACKENDS = ["account.backends.EmailBackend"]
-
 
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_PORT = os.environ.get("EMAIL_PORT", 465)
